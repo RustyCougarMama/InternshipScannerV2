@@ -1,4 +1,6 @@
-﻿using System;
+﻿using InternshipScannerV2.ViewModels;
+using InternshipScannerV2.Views;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,9 +22,24 @@ namespace InternshipScannerV2
     /// </summary>
     public partial class MainWindow : Window
     {
+        private MainView mainV= null;
+        private SettingsView settingsV= null;
         public MainWindow()
         {
             InitializeComponent();
+            mainV = new MainView();
+            settingsV = new SettingsView();
+            DataContext = mainV;
+        }
+
+        private void mainWindow_Click(object sender, RoutedEventArgs e)
+        {
+            DataContext = mainV;
+        }
+
+        private void settings_Click(object sender, RoutedEventArgs e)
+        {
+            DataContext = settingsV;
         }
     }
 }

@@ -4,9 +4,32 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:InternshipScannerV2"
+        xmlns:viewmodels="clr-namespace:InternshipScannerV2.ViewModels"
+        xmlns:views="clr-namespace:InternshipScannerV2.Views"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="377"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="137*"/>
+            <ColumnDefinition Width="663*"/>
+        </Grid.ColumnDefinitions>
+
+        <Rectangle Grid.Column="1" Grid.Row="0" Fill="SlateGray"/>
+
+        <DockPanel Background="DarkSlateGray" Grid.Column="0" Grid.RowSpan="2">
+            <TextBlock Text="Steven's Internship Scanner" TextWrapping="WrapWithOverflow" TextAlignment="Center" DockPanel.Dock="Top" Margin="0,0,0,50"/>
+            <StackPanel DockPanel.Dock="Left">
+                <Button Name="mainBut" Content="Main Window" Margin="0,0,0,10" Click="mainWindow_Click"/>
+                <Button Name="settingsBut" Content="Settings" Margin="0,0,0,10" Click="settings_Click"/>
+            </StackPanel>
+        </DockPanel>
+
+        <ContentControl Content="{Binding}" Grid.Row="1" Grid.Column="1"/>
+
 
     </Grid>
 </Window>
