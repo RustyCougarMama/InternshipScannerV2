@@ -1,4 +1,5 @@
-﻿using InternshipScannerV2.ViewModels;
+﻿using InternshipScannerV2.Controllers;
+using InternshipScannerV2.ViewModels;
 using InternshipScannerV2.Views;
 using System;
 using System.Collections.Generic;
@@ -42,4 +43,6 @@ namespace InternshipScannerV2
             DataContext = settingsV;
         }
     }
+
+
 }

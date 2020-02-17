@@ -7,18 +7,18 @@
         xmlns:viewmodels="clr-namespace:InternshipScannerV2.ViewModels"
         xmlns:views="clr-namespace:InternshipScannerV2.Views"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="1024" Width="1280">
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
             <RowDefinition/>
-            <RowDefinition Height="377"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="137*"/>
             <ColumnDefinition Width="663*"/>
         </Grid.ColumnDefinitions>
 
-        <Rectangle Grid.Column="1" Grid.Row="0" Fill="SlateGray"/>
+        <Rectangle Grid.Row="0" Fill="SlateGray" Grid.ColumnSpan="2" Margin="0,0,0,0"/>
 
         <DockPanel Background="DarkSlateGray" Grid.Column="0" Grid.RowSpan="2">
             <TextBlock Text="Steven's Internship Scanner" TextWrapping="WrapWithOverflow" TextAlignment="Center" DockPanel.Dock="Top" Margin="0,0,0,50"/>
@@ -28,7 +28,7 @@
             </StackPanel>
         </DockPanel>
 
-        <ContentControl Content="{Binding}" Grid.Row="1" Grid.Column="1"/>
+        <ContentControl Content="{Binding}" Grid.Column="1" Grid.Row="1"  Grid.ColumnSpan="2" />
 
 
     </Grid>

@@ -5,9 +5,77 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:InternshipScannerV2.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="623" d:DesignWidth="800">
+    <UserControl.CommandBindings>
+        <CommandBinding Command="NavigationCommands.BrowseBack" CanExecute="BrowseBack_CanExecute" Executed="BrowseBack_Executed" />
+        <CommandBinding Command="NavigationCommands.BrowseForward" CanExecute="BrowseForward_CanExecute" Executed="BrowseForward_Executed" />
+        <CommandBinding Command="NavigationCommands.GoToPage" CanExecute="GoToPage_CanExecute" Executed="GoToPage_Executed" />
+    </UserControl.CommandBindings>
+
     <Grid Background="LightGray">
-        <Button Name="mainBut" Content="THE DO IT BUTTON!" Click="main_Click"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="250"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <DockPanel Grid.Column="1" Grid.Row="0" Grid.RowSpan="2">
+            <ToolBar DockPanel.Dock="Top">
+
+                <TextBox Name="txtUrl" Width="500" KeyUp="txtUrl_KeyUp" IsEnabled="False" />
+            </ToolBar>
+            <WebBrowser Name="wbSample" Navigating="wbSample_Navigating" ></WebBrowser>
+        </DockPanel>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="80.6"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="80.6"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="29*"/>
+            </Grid.RowDefinitions>
+            <Button Name="btnStart" Content="Start" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Margin="5,5,5,5" Click="btnStart_Click"/>
+            <StackPanel Grid.Row="1" Grid.Column="0" Margin="5,10,0,0">
+                <Label Content="Current Education:" Margin="0,0,0,7" FontWeight="Bold"/>
+                <Label Content="Student Name:" Margin="0,0,0,7"/>
+                <Label Content="Student Email:" Margin="0,0,0,7"/>
+                <Label Content="Name of Workplace:" Margin="0,0,0,7"/>
+            </StackPanel>
+            <StackPanel Grid.Row="1" Grid.Column="1" Margin="0,10,0,0">
+                <TextBlock Name="tbEducation" Text="" TextWrapping="Wrap" Margin="0,0,2,2" Height="31.92" Background="White" FontWeight="Bold"/>
+                <TextBlock Name="tbStudentName" Text="" TextWrapping="Wrap" Margin="0,0,2,2" Height="31.92" Background="White"/>
+                <TextBlock Name="tbStudentEmail" Text="" TextWrapping="Wrap" Margin="0,0,2,2" Height="31.92" Background="White"/>
+                <TextBlock Name="tbStudentWorkPlace" Text="" TextWrapping="Wrap" Margin="0,0,2,2" Height="31.92" Background="White"/>
+            </StackPanel>
+            <StackPanel Grid.Row="2" Grid.ColumnSpan="2" Margin="5,5,5,5"/>
+            <Button Name="btnApprove" Grid.Column="0" Grid.Row="3" Content="APPROVE" Margin="5,5,5,5" Background="Green" Click="btnApprove_Click"/>
+            <Button Name="btnDeny" Grid.Column="1" Grid.Row="3" Content="DENY" Margin="5,5,5,5" Background="Red" Click="btnDeny_Click"/>
+            <Label Content="For this Education" FontWeight="Bold" Grid.Column="0" Grid.Row="4" Margin="5,5,5,5"/>
+            <StackPanel Grid.Row="5" Grid.Column="0" Margin="5,5,5,5">
+                <Label Content="Int Students:"/>
+                <Label Content="Students Screened:"/>
+                <Label Content="Students in DK:"/>
+            </StackPanel>
+            <StackPanel Grid.Row="5" Grid.Column="1" Margin="5,5,5,5">
+                <Label Name="tbIntStudents" Content="0"/>
+                <Label Name="tbStudentsScreened" Content="0"/>
+                <Label Name="tbStudentsDK" Content="0"/>
+            </StackPanel>
+
+                <TextBox Name="tbStatusBox" Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Margin="5" Background="White" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto">
+                    
+                </TextBox>
+
+        </Grid>
+
     </Grid>
-    
+
 </UserControl>

@@ -22,5 +22,9 @@ namespace InternshipScannerV2.Views
         {
             InitializeComponent();
         }
+
+        //TODO Make a results folder picker
+        //TODO Make a data folder picker
+        //TODO figure out how to save this
     }
 }
