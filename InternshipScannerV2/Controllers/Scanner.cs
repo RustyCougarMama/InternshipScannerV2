@@ -434,17 +434,35 @@ namespace InternshipScannerV2.Controllers
                     curResultFileInfo = new FileInfo(ResultsFolder + ResultName );
 
                 }
+                ExcelWorksheet wsg = ex.Workbook.Worksheets.Add("Overview");
+
+                //Make the Title
+                var cellOve = wsg.Cells[1, 1];
+                cellOve.IsRichText = true;
+                var Ove = cellOve.RichText.Add("General Overview");
+                Ove.Bold = true;
+                Ove.Size = 24;
+                cellOve.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                cellOve.Style.Fill.BackgroundColor.SetColor(Color.AliceBlue);
+                wsg.Cells[1, 1, 1, 10].Merge = true;
+
+                //Make the columns
+                wsg.Cells[3, 1].Value = "Education";
+                wsg.Cells[3, 2].Value = "Total Students";
+                wsg.Cells[3, 3].Value = "Students in DK";
+                wsg.Cells[3, 4].Value = "% of Students in DK";
+                var headingCells2 = wsg.Cells[3, 1, 3, 4];
+                headingCells2.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                headingCells2.Style.Fill.BackgroundColor.SetColor(Color.LightGray);
+                headingCells2.Style.Border.BorderAround(ExcelBorderStyle.Medium);
+
+                int curOverviewCell = 4;
+                int finalEducationRow = 0;
 
                 foreach (string education in educations)
                 {
                     IDictionary eDic = (IDictionary)IntStudentsDictionary[education];
                     ExcelWorksheet ws = ex.Workbook.Worksheets.Add(education);
-                    //ExcelWorksheet ws =
-                    //    ex.Workbook.Worksheets.FirstOrDefault(x => x.Name == education);
-                    //if (ws == null)
-                    //{
-                    //    ws = ex.Workbook.Worksheets.Add(education);
-                    //}
 
                     var cellEdu = ws.Cells[1, 1];
                     cellEdu.IsRichText = true;
@@ -453,6 +471,7 @@ namespace InternshipScannerV2.Controllers
                     Edu.Size = 24;
                     cellEdu.Style.Fill.PatternType = ExcelFillStyle.Solid;
                     cellEdu.Style.Fill.BackgroundColor.SetColor(Color.AliceBlue);
+                    ws.Cells[1, 1, 1, 10].Merge = true;
 
                     var cellStudent = ws.Cells[3, 1];
                     cellStudent.IsRichText = true;
@@ -473,8 +492,11 @@ namespace InternshipScannerV2.Controllers
                     var headingCells = ws.Cells[3, 1, 3, 4];
                     headingCells.Style.Fill.PatternType = ExcelFillStyle.Solid;
                     headingCells.Style.Fill.BackgroundColor.SetColor(Color.LightGray);
+                    headingCells.Style.Border.BorderAround(ExcelBorderStyle.Medium);
 
                     int curRow = 4;
+                    int totalStudents = 0;
+                    int dkStudents = 0;
 
                     foreach (DictionaryEntry student in eDic)
                     {
@@ -483,12 +505,93 @@ namespace InternshipScannerV2.Controllers
                         ws.Cells[curRow, 1].Value = s.Name;
                         ws.Cells[curRow, 2].Value = s.Email;
                         ws.Cells[curRow, 3].Value = s.JobTitle;
-                        ws.Cells[curRow, 4].Value = s.isStudyingiInDK;
-                        //TODO Make thing red or green depending on studying in DK or not.
+
+                        var dkCell = ws.Cells[curRow, 4];
+                        dkCell.IsRichText = true;
+                        dkCell.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                        dkCell.Value = s.isStudyingiInDK;
+                        if (s.isStudyingiInDK)
+                        {
+                            dkCell.Style.Fill.BackgroundColor.SetColor(Color.PaleGreen);
+                            dkStudents++;
+                        }
+                        else dkCell.Style.Fill.BackgroundColor.SetColor(Color.PaleVioletRed);
+
+                        totalStudents++;
                         curRow++;
                     }
 
+                    //Total up all of the students and display it
+                    curRow++;
+                    ws.Cells[curRow, 1].Value = "Total Students";
+                    ws.Cells[curRow, 2].Value = "Students in DK";
+                    ws.Cells[curRow, 3].Value = "% of Students in DK";
+                    var headingCells3 = ws.Cells[curRow, 1, curRow, 3];
+                    headingCells3.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    headingCells3.Style.Fill.BackgroundColor.SetColor(Color.LightGray);
+                    headingCells3.Style.Border.BorderAround(ExcelBorderStyle.Medium);
+                    curRow++;
+
+                    var totalCell = ws.Cells[curRow, 1];
+                    totalCell.Value = totalStudents;
+
+                    var dkStudentCell = ws.Cells[curRow, 2];
+                    dkStudentCell.Value = dkStudents;
+
+                    var percentageCell = ws.Cells[curRow, 3];
+                    percentageCell.Formula = "=(" + dkStudentCell.Address + "/" + totalCell.Address + ")";
+                    percentageCell.Style.Numberformat.Format = "0%";
+                    percentageCell.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    percentageCell.Style.Fill.BackgroundColor.SetColor(Color.PaleTurquoise);
+
+                    ws.Cells[ws.Dimension.Address].AutoFitColumns();
+
+                    //Add these statistics to the 'Overview' tab
+                    wsg.Cells[curOverviewCell, 1].Value = education;
+                    
+                    var genTotalStudents = wsg.Cells[curOverviewCell, 2];
+                    genTotalStudents.Value = totalStudents;
+
+                    var genDKStudents = wsg.Cells[curOverviewCell, 3];
+                    genDKStudents.Value = dkStudents;
+
+                    var genPercentageCell = wsg.Cells[curOverviewCell, 4];
+                    genPercentageCell.Formula = "=(" + genDKStudents.Address + "/" + genTotalStudents.Address + ")";
+                    genPercentageCell.Style.Numberformat.Format = "0%";
+                    genPercentageCell.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    genPercentageCell.Style.Fill.BackgroundColor.SetColor(Color.PaleTurquoise);
+
+                    //Log the last row where an education was imputed.
+                    finalEducationRow = curOverviewCell;
+
+                    curOverviewCell++;
                 }
+                //Colour all of the Education titles
+                var educationTitles = wsg.Cells[4, 1, (curOverviewCell-1), 1];
+                educationTitles.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                educationTitles.Style.Fill.BackgroundColor.SetColor(Color.LightGray);
+
+                curOverviewCell++;
+
+                wsg.Cells[curOverviewCell, 2].Value = "All Students";
+                wsg.Cells[curOverviewCell, 3].Value = "All Students in DK";
+                wsg.Cells[curOverviewCell, 4].Value = "% of All Students in DK";
+                var headingCells4 = wsg.Cells[curOverviewCell, 1, curOverviewCell, 3];
+                headingCells4.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                headingCells4.Style.Fill.BackgroundColor.SetColor(Color.LightGray);
+                headingCells4.Style.Border.BorderAround(ExcelBorderStyle.Medium);
+                curOverviewCell++;
+
+                var allTotalStudents = wsg.Cells[curOverviewCell, 2];
+                allTotalStudents.Formula = "=SUM(B4:B"+ finalEducationRow + ")";
+
+                var allDKStudents = wsg.Cells[curOverviewCell, 3];
+                allDKStudents.Formula = "=SUM(C4:C" + finalEducationRow + ")";
+
+                var allDKStudentsPer = wsg.Cells[curOverviewCell, 4];
+                allDKStudentsPer.Formula = "=(" + allDKStudents.Address + "/" + allTotalStudents.Address + ")";
+
+                wsg.Cells[wsg.Dimension.Address].AutoFitColumns();
 
                 ex.SaveAs(curResultFileInfo);
                 appendTextBox("Excel file saved to: " + ResultsFolder);
