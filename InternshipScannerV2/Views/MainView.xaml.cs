@@ -1,5 +1,6 @@
 ﻿using InternshipScannerV2.Controllers;
 using System;
+using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
@@ -35,9 +36,11 @@ namespace InternshipScannerV2.Views
             studentsInDK = 0;
             btnApprove.IsEnabled = false;
             btnDeny.IsEnabled = false;
+            string curDirectory = Directory.GetCurrentDirectory();
+            Console.WriteLine(curDirectory);
 
         }
-        #region WPF garbage
+        #region WPF Stuff
         void wbMain_Navigated(object sender, NavigationEventArgs e)
         {
             SetSilent(wbSample, true); // make it silent
@@ -114,28 +117,29 @@ namespace InternshipScannerV2.Views
         }
         #endregion
 
-
+        /// <summary>
+        /// The start button, which starts the whole program. It will find the current working directory, instantiate the 'Scanner' class
+        /// and prepare the program for the users next input.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnStart_Click(object sender, RoutedEventArgs e)
         {
-            string internationalStudentsExcelFilePath = @"D:\Google Drive\UCN Work\InternshipScannerV2\InternationalStudentsList\International students - B&T.xlsx";
-            string dataFilePath = @"D:\Google Drive\UCN Work\InternshipScannerV2\Data";
-            string resultsFilePath = @"D:\Google Drive\UCN Work\InternshipScannerV2\Result\";
+            string currentDirectory = Directory.GetCurrentDirectory();
+            currentDirectory = currentDirectory.Replace(@"InternshipScannerV2\bin\Debug\netcoreapp3.0", "");
+            string internationalStudentsExcelFilePath = currentDirectory + @"InternationalStudentsList\International students - B&T.xlsx";
+            string dataFilePath = currentDirectory + @"Data";
+            string resultsFilePath = currentDirectory + @"Result\";
             string resultName = "Result";
             sc = new Scanner(resultName, resultsFilePath, internationalStudentsExcelFilePath, dataFilePath, tbStatusBox);
             tbIntStudents.Content = sc.CollectInternationalEmails();
             sc.GetAllExcelFiles();
             tbIntStudents.Content = sc.ProcessExcelFiles();
-            //sc.ScanStudents(tbStudentName, tbStudentEmail, tbStudentWorkPlace, tbEducation);
             sc.StepScan(tbStudentName, tbStudentEmail, tbStudentWorkPlace, tbEducation);
             updateGoogleMaps();
             isReadyForInput = true;
             btnStart.IsEnabled = false;
             ToggleRedGreenButtons();
-        }
-
-        private void Start()
-        {
-            
         }
 
         private void btnApprove_Click(object sender, RoutedEventArgs e)

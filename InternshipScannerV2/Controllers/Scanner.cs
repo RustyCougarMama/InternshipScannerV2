@@ -10,38 +10,6 @@ using OfficeOpenXml.Style;
 
 namespace InternshipScannerV2.Controllers
 {
-    //class Program
-    //{
-    //    static void Main(string[] args)
-    //    {
-    //        Console.WriteLine("Are you ready?");
-    //        Console.ReadLine();
-    //        Scanner s = new Scanner();
-    //        s.CollectInternationalEmails();
-    //        Console.WriteLine("Print all Files?");
-    //        Console.ReadLine();
-    //        s.GetAllExcelFiles();
-    //        foreach (string name in s.DataFileNames)
-    //        {
-    //            Console.WriteLine(name);
-    //        }
-    //        s.ProcessExcelFiles();
-    //        foreach (var education in s.IntStudentsDictionary.Keys)
-    //        {
-    //            Console.WriteLine("");
-    //            Console.WriteLine(education);
-    //            Console.WriteLine("##############################################################");
-    //            IDictionary students = (IDictionary)s.IntStudentsDictionary[education];
-    //            foreach (var student in students.Keys)
-    //            {
-    //                Console.WriteLine(student);
-    //            }
-    //            //Console.WriteLine(dic);
-    //        }
-    //        Console.WriteLine("You are now done...");
-    //        Console.ReadKey();
-    //    }
-    //}
     public class Student
     {
         public string Name { get; set; }
@@ -75,35 +43,10 @@ namespace InternshipScannerV2.Controllers
         public IDictionary IntStudentsDictionary { get; set; }
         private List<string> listOfEducations;
         private FileInfo curResultFileInfo;
-        private ArrayList curStudentEmails;
         private ArrayList studentsInCurEducation;
         private int curStudentIndex;
         private int curEducationIndex;
-        private int curEducationSize;
-        private int numberOfEducations;
         public TextBox tb;
-
-
-
-        public Scanner()
-        {
-            InternationalStudentsExcelFilePath = @"D:\Google Drive\UCN Work\InternshipScannerV2\InternationalStudentsList\International students - B&T.xlsx";
-            DataFilePath = @"D:\Google Drive\UCN Work\InternshipScannerV2\Data";
-            ResultsFolder = @"D:\Google Drive\UCN Work\InternshipScannerV2\Result\";
-            DataFileNames = new ArrayList();
-            DataRowStart = 2;
-            InternationalStudentEmails = new ArrayList();
-            IntStudentsRowStart = 2;
-            IntStudentsColumnStart = 1;
-            IntStudentsDictionary = new Dictionary<string, Dictionary<string, Student>>();
-            curStudentEmails = new ArrayList();
-            curStudentIndex = 0;
-            curEducationIndex = 0;
-            curEducationSize = 0;
-            numberOfEducations = 0;
-            ResultName = "result1.xlsx";
-            listOfEducations = new List<string>();
-        }
 
         public Scanner(string resultName, string resultFolderFilePath, string intStudentExcelFilePath, string dataFilePath, TextBox textBox)
         {
@@ -140,6 +83,10 @@ namespace InternshipScannerV2.Controllers
         public int CollectInternationalEmails()
         {
             Console.WriteLine("Collecting emails of all registered International Students");
+            string currentDirectory = Directory.GetCurrentDirectory();
+            appendTextBox(currentDirectory);
+            currentDirectory = currentDirectory.Replace(@"InternshipScannerV2\bin\Debug\netcoreapp3.0", "");
+            appendTextBox(currentDirectory);
             appendTextBox("Collecting emails of all registered International Students");
             try
             {
@@ -248,35 +195,6 @@ namespace InternshipScannerV2.Controllers
 
             return noInternationStudents;
         }
-        /// <summary>
-        /// Creates the starting excel workbook to be used for the results.
-        /// </summary>
-        //private void CreateResultExcel()
-        //{
-        //    string[] files = Directory.GetFiles(ResultsFolder);
-        //    if (files.Length == 0)
-        //    {
-        //        using (ExcelPackage ex = new ExcelPackage())
-        //        {
-        //            ex.Workbook.Properties.Title = ResultName;
-        //            curResultFileInfo = new FileInfo(ResultsFolder + ResultName + ".xlsx");
-        //            ex.Workbook.Worksheets.Add("config");
-        //            ex.SaveAs(curResultFileInfo);
-        //        }
-        //        return;
-        //    }
-        //    else
-        //    {
-        //        using (ExcelPackage ex = new ExcelPackage())
-        //        {
-        //            ResultName = ResultName + (files.Length + 1);
-        //            ex.Workbook.Properties.Title = ResultName;
-        //            curResultFileInfo = new FileInfo(ResultsFolder + ResultName + ".xlsx");
-        //            ex.SaveAs(curResultFileInfo);
-        //        }
-        //        return;
-        //    }
-        //}
 
         #endregion
         /// <summary>
@@ -414,6 +332,10 @@ namespace InternshipScannerV2.Controllers
             curStudentIndex++;
         }
 
+        /// <summary>
+        /// This function will take all of the data gained from running the program and the users inputs,
+        /// and will then build a nice excel sheet out of it. 
+        /// </summary>
         public void saveEducationResults()
         {
             ArrayList educations = new ArrayList(IntStudentsDictionary.Keys);
